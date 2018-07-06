@@ -19,7 +19,7 @@ import logging
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s', level=logging.DEBUG)
 
-# ½ÓÊÕ²ÎÊı
+# æ¥æ”¶å‚æ•°å‡½æ•°
 def parse_args(check=True):
     parser = argparse.ArgumentParser()
     parser.add_argument('--checkpoint_path', type=str)
@@ -52,8 +52,8 @@ image_tensor, orig_img_tensor, annotation_tensor = tf.cond(is_training_placehold
 
 feed_dict_to_use = {is_training_placeholder: True}
 
-upsample_factor = 8            # ÉÏ²ÉÑùÊ±ºòµÄ×îºó²ÉÑù±¶Êı£¬pool3ÊÇ8±¶²ÉÑù£¨ÏÈ¾­¹ıÁ½´Î2±¶ÉÏ²ÉÑù£©
-number_of_classes = 21         # ·ÖÀàÊı£¬20ÖÖ²»Í¬µÄÎïÌå·ÖÀà£¬0Îª±³¾°·ÖÀà
+upsample_factor = 8            # ä¸Šé‡‡æ ·æ—¶å€™çš„æœ€åé‡‡æ ·å€æ•°ï¼Œpool3æ˜¯8å€é‡‡æ ·ï¼ˆå…ˆç»è¿‡ä¸¤æ¬¡2å€ä¸Šé‡‡æ ·ï¼‰
+number_of_classes = 21         # åˆ†ç±»æ•°ï¼Œ20ç§ä¸åŒçš„ç‰©ä½“åˆ†ç±»ï¼Œ0ä¸ºèƒŒæ™¯åˆ†ç±»
 
 log_folder = os.path.join(FLAGS.output_dir, 'train')
 
@@ -84,7 +84,7 @@ upsampled_logits_shape = tf.stack([
                                   downsampled_logits_shape[3]
                                   ])
 
-# ¶Ôvgg_16Ô¤ÑµÁ·Ä£ĞÍÖĞpool4µÄÊä³öÌØÕ÷½øĞĞ(1,1)¾í»ı 
+# å¯¹vgg_16é¢„è®­ç»ƒæ¨¡å‹ä¸­pool4çš„è¾“å‡ºç‰¹å¾è¿›è¡Œ(1,1)å·ç§¯ 
 pool4_feature = end_points['vgg_16/pool4']
 with tf.variable_scope('vgg_16/fc8'):
     aux_logits_16s = slim.conv2d(pool4_feature, number_of_classes, [1, 1],
@@ -92,7 +92,7 @@ with tf.variable_scope('vgg_16/fc8'):
                                  weights_initializer=tf.zeros_initializer,
                                  scope='conv_pool4')
     
-# ¶Ôvgg_16Ô¤ÑµÁ·Ä£ĞÍÖĞpool3µÄÊä³öÌØÕ÷½øĞĞ(1,1)¾í»ı 
+# å¯¹vgg_16é¢„è®­ç»ƒæ¨¡å‹ä¸­pool3çš„è¾“å‡ºç‰¹å¾è¿›è¡Œ(1,1)å·ç§¯ 
 pool3_feature = end_points['vgg_16/pool3']
 with tf.variable_scope('vgg_16/fc8'):
     aux_logits_8s = slim.conv2d(pool3_feature, number_of_classes, [1, 1],
@@ -101,31 +101,31 @@ with tf.variable_scope('vgg_16/fc8'):
                                  scope='conv_pool3')
  
     
-# Perform the upsampling   ÉÏ²ÉÑù
+# Perform the upsampling   ä¸Šé‡‡æ ·
 
-# 1¡¢¶Ôvgg_16Ô¤ÑµÁ·Ä£ĞÍÖĞpool5µÄÊä³öÌØÕ÷½øĞĞ2xÉÏ²ÉÑù
-upsample_filter_np_x2 = bilinear_upsample_weights(2, number_of_classes)        # bilinear_upsample_weights():Ë«ÏßĞÔ²åÖµ
+# 1ã€å¯¹vgg_16é¢„è®­ç»ƒæ¨¡å‹ä¸­pool5çš„è¾“å‡ºç‰¹å¾è¿›è¡Œ2xä¸Šé‡‡æ ·
+upsample_filter_np_x2 = bilinear_upsample_weights(2, number_of_classes)        # bilinear_upsample_weights():åŒçº¿æ€§æ’å€¼
 upsample_filter_tensor_x2 = tf.Variable(upsample_filter_np_x2, name='vgg_16/fc8/t_conv_x4')
 upsampled_logits_pool5 = tf.nn.conv2d_transpose(logits, upsample_filter_tensor_x2,
                                           output_shape=tf.shape(aux_logits_16s),
                                           strides=[1, 2, 2, 1],
                                           padding='SAME')
-# 2¡¢°Ñpool4(1,1)¾í»ıºóµÄÌØÕ÷²åÈëµ½ÉÏ²ÉÑùºóµÄÌØÕ÷ÖĞ£¬ĞÎ³ÉĞÂµÄÌØÕ÷
+# 2ã€æŠŠpool4(1,1)å·ç§¯åçš„ç‰¹å¾æ’å…¥åˆ°ä¸Šé‡‡æ ·åçš„ç‰¹å¾ä¸­ï¼Œå½¢æˆæ–°çš„ç‰¹å¾
 upsampled_logits_pool4 = upsampled_logits_pool5 + aux_logits_16s
 
 
-# 3¡¢¶ÔĞÂÌØÕ÷upsampled_logits_pool4½øĞĞ2xÉÏ²ÉÑù
+# 3ã€å¯¹æ–°ç‰¹å¾upsampled_logits_pool4è¿›è¡Œ2xä¸Šé‡‡æ ·
 upsample_filter_np_x2 = bilinear_upsample_weights(2, number_of_classes)        
 upsample_filter_tensor_x2 = tf.Variable(upsample_filter_np_x2, name='vgg_16/fc8/t_conv_x4')
 upsampled_logits_pool4 = tf.nn.conv2d_transpose(upsampled_logits_pool4, upsample_filter_tensor_x2,
                                           output_shape=tf.shape(aux_logits_8s),
                                           strides=[1, 2, 2, 1],
                                           padding='SAME')
-# 4¡¢°Ñpool3(1,1)¾í»ıºóµÄÌØÕ÷²åÈëµ½ÉÏ²ÉÑùºóµÄÌØÕ÷ÖĞ£¬ĞÎ³ÉĞÂµÄÌØÕ÷
+# 4ã€æŠŠpool3(1,1)å·ç§¯åçš„ç‰¹å¾æ’å…¥åˆ°ä¸Šé‡‡æ ·åçš„ç‰¹å¾ä¸­ï¼Œå½¢æˆæ–°çš„ç‰¹å¾
 upsampled_logits = upsampled_logits_pool4 + aux_logits_8s
 
 
-# 5¡¢¶ÔĞÂÌØÕ÷upsampled_logits½øĞĞ8xÉÏ²ÉÑù
+# 5ã€å¯¹æ–°ç‰¹å¾upsampled_logitsè¿›è¡Œ8xä¸Šé‡‡æ ·
 upsample_filter_np_x8 = bilinear_upsample_weights(upsample_factor,
                                                    number_of_classes)
 upsample_filter_tensor_x8 = tf.Variable(upsample_filter_np_x8, name='vgg_16/fc8/t_conv_x8')
@@ -146,7 +146,7 @@ cross_entropy_loss = tf.reduce_mean(tf.reduce_sum(cross_entropies, axis=-1))
 # attention that we don't need softmax in this case because
 # we only need the final decision. If we also need the respective
 # probabilities we will have to apply softmax.
-pred = tf.argmax(upsampled_logits, axis=3)    # ×î´ó¸ÅÂÊµÄÀà±ğ
+pred = tf.argmax(upsampled_logits, axis=3)    # æœ€å¤§æ¦‚ç‡çš„ç±»åˆ«
 
 probabilities = tf.nn.softmax(upsampled_logits)
 
