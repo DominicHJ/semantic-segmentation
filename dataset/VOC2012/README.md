@@ -1,0 +1,1 @@
+﻿download voc2012 data from http://host.robots.ox.ac.uk/pascal/VOC/voc2012/
