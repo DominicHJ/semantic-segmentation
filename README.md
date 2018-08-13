@@ -1,4 +1,4 @@
-﻿## semantic-segmentation   
+﻿# semantic-segmentation   
 
 ### 1简介  
 构建FCN-8s网络模型，使用PASCAL VOC2012中语义分割数据集中的数据，完成网络训练和结果预测    
@@ -8,37 +8,37 @@ VOC数据集下载网址：http://host.robots.ox.ac.uk/pascal/VOC/voc2012/
 
 VOC数据集目录结构如下：  
 
-├── local
-│   ├── VOC2006
-│   └── VOC2007
-├── results
-│   ├── VOC2006
-│   │   └── Main
-│   └── VOC2007
-│       ├── Layout
-│       ├── Main
-│       └── Segmentation
-├── VOC2007
-│   ├── Annotations
-│   ├── ImageSets
-│   │   ├── Layout
-│   │   ├── Main
-│   │   └── Segmentation
-│   ├── JPEGImages
-│   ├── SegmentationClass
-│   └── SegmentationObject
-├── VOC2012
-│   ├── Annotations
-│   ├── ImageSets
-│   │   ├── Action
-│   │   ├── Layout
-│   │   ├── Main
-│   │   └── Segmentation
-│   ├── JPEGImages
-│   ├── SegmentationClass
-│   └── SegmentationObject
-└── VOCcode
-
+├── local  
+│   ├── VOC2006  
+│   └── VOC2007  
+├── results  
+│   ├── VOC2006  
+│   │   └── Main  
+│   └── VOC2007  
+│       ├── Layout  
+│       ├── Main  
+│       └── Segmentation  
+├── VOC2007  
+│   ├── Annotations  
+│   ├── ImageSets  
+│   │   ├── Layout  
+│   │   ├── Main  
+│   │   └── Segmentation  
+│   ├── JPEGImages  
+│   ├── SegmentationClass  
+│   └── SegmentationObject  
+├── VOC2012  
+│   ├── Annotations  
+│   ├── ImageSets  
+│   │   ├── Action  
+│   │   ├── Layout  
+│   │   ├── Main  
+│   │   └── Segmentation  
+│   ├── JPEGImages  
+│   ├── SegmentationClass  
+│   └── SegmentationObject  
+└── VOCcode  
+  
 数据集位于VOC2012/ImageSets/Segmentation中，分为train.txt 1464张图片和val.txt1449张图片。其中语义分割标签位于VOC2012/SegmentationClass,不是数据集中所有的图片都有语义分类的标签。   
 语义分割标签用颜色来标志不同的物体，该数据集中共有20种不同的物体分类，以1～20的数字编号，加上编号为0的背景分类，该数据集中共有21种分类。编号与颜色的对应关系如下：   
 ```python
@@ -66,7 +66,7 @@ colormap = [[0, 0, 0], [128, 0, 0], [0, 128, 0], [128, 128, 0], [0, 0, 128],
 1）test image  
 ![](val_1400_img.jpg 'test image')    
 2）groundtruth image  
-![](val_200_annotation.jpg 'groundtruth image ')    
+![](val_1400_annotation.jpg 'groundtruth image ')    
 3）prediction image   
 ![](val_1400_prediction.jpg 'prediction image ')    
 4）CRFed prediction image    
