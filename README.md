@@ -1,9 +1,9 @@
 ﻿# semantic-segmentation   
 
-### 1简介  
+### 1 简介  
 构建FCN-8s网络模型，使用PASCAL VOC2012中语义分割数据集中的数据，完成网络训练和结果预测    
 
-### 2数据集    
+### 2 数据集    
 VOC数据集下载网址：http://host.robots.ox.ac.uk/pascal/VOC/voc2012/    
 
 VOC数据集目录结构如下：  
@@ -56,13 +56,13 @@ colormap = [[0, 0, 0], [128, 0, 0], [0, 128, 0], [128, 128, 0], [0, 0, 128],
             [0, 192, 0], [128, 192, 0], [0, 64, 128]]
 ```
 
-### 3代码实现   
+### 3 代码实现   
 1）使用convert_fcn_dataset.py读取原始图像（jpg）和标签（png），按照格式填充feature_dict，将原始数据转化为TFRecord格式  
 2）下载并使用vgg16预训练模型   
 3）将vgg网络的全连接层改为全卷积（same padding），并根据论文进行对feature map进行两次2倍上采样和element相加过程，最终得到的feature map再进行一次8倍上采样处理，得到与原图大小相同的feature map，对比groundtruth进行网络训练    
 4）增加CRF对验证集图片进行inference     
 
-### 4结果验证   
+### 4 结果验证   
 1）test image  
 ![](val_1400_img.jpg 'test image')    
 2）groundtruth image  
